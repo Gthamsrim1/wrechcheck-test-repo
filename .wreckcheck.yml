@@ -1,0 +1,3 @@
+failOn: high
+ignore:
+  - docker:floating-base-image
