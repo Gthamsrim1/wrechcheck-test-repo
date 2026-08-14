@@ -1,0 +1,30 @@
+name: Test WreckCheck
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  wreckcheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: Gthamsrim1/wreckcheck/packages/action@dev
+        with:
+          fail-on: high
+
+      - name: Debug sarif
+        if: always()
+        run: jq '.runs[0].results | length' wreckcheck-results.sarif
+
+      - uses: github/codeql-action/upload-sarif@v4
+        if: always()
+        with:
+          sarif_file: wreckcheck-results.sarif
+          wait-for-processing: true
